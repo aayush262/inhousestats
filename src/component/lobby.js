@@ -1,24 +1,93 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
+import UnselectedPlayers  from './UnselectedPlayers/UnselectedPlayers'
+import SelectedPlayers from './SelectedPlayers/SelectedPlayers';
+
+import style from './lobby.module.scss'
+
 export class Lobby extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            isGame: false
+            isGameStarted: false,
+            isGameReady: false,
+            radPlayers: [],
+            direPlayers: [],
+            unselectedPlayers: [
+                {
+                    id: 1,
+                    image: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/32/32ae6e98876f1ce90f87bb639b0a3ac780e2d046.jpg",
+                    name: ";/ (y)",
+                    status: true
+                },
+                {
+                    id: 2,
+                    image: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/59/597471d990ad1cb07af4e5104ea324b982ea123c.jpg",
+                    name: "bobby",
+                    status: true
+                },
+                {
+                    id: 3,
+                    image: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/a8/a8091fa7e1c73cf1289ef49f74e105e0c0f5562f.jpg",
+                    name: "invis - Kuroko",
+                    status: false
+                }
+            ]
         }
     }
 
-    clickHandler=()=>{
+    startHandler=()=>{
         this.setState({
-            isGame: true
+            isGameStarted: true
         })
     }
   
+    moveUnselectedToRad = (id) => {
+        if (this.state.radPlayers.length >= 5){
+            console.error("Radiant players full")
+            return
+        }
+        let selectedPlayer = this.state.unselectedPlayers.find(player=>player.id===id);
+        this.setState({unselectedPlayers: [...this.state.unselectedPlayers.filter(player=>player.id!==id)]})
+        this.setState({radPlayers:[...this.state.radPlayers, selectedPlayer]});
+        if (this.state.radPlayers.length === 5  && this.state.direPlayers.length === 5){
+            this.setState({isGameReady: true})
+        }
+    }
+    
+    moveUnselectedToDire = (id) => {
+        if (this.state.direPlayers.length >= 5){
+            console.error("Dire players full")
+            return
+        }
+        let selectedPlayer = this.state.unselectedPlayers.find(player=>player.id===id);
+        this.setState({unselectedPlayers: [...this.state.unselectedPlayers.filter(player=>player.id!==id)]})
+        this.setState({direPlayers:[...this.state.direPlayers, selectedPlayer]});
+        if (this.state.radPlayers.length === 5  && this.state.direPlayers.length === 5){
+            this.setState({isGameReady: true})
+        }
+    }
+
+    unselectPlayerFromRad = (id) => {
+        let unselectedPlayer = this.state.radPlayers.find(player=>player.id===id);
+        this.setState({radPlayers: [...this.state.radPlayers.filter(player=>player.id!==id)]})
+        this.setState({unselectedPlayers:[...this.state.unselectedPlayers, unselectedPlayer]});
+        this.setState({isGameReady: false})
+    }
+    
+    unselectPlayerFromDire = (id) => {
+        let unselectedPlayer = this.state.direPlayers.find(player=>player.id===id);
+        this.setState({direPlayers: [...this.state.direPlayers.filter(player=>player.id!==id)]})
+        this.setState({unselectedPlayers:[...this.state.unselectedPlayers, unselectedPlayer]});
+        this.setState({isGameReady: false})
+    }
+
+
+
     render() {
 
-        console.log(this.state)
         
         return (
             <>
@@ -43,151 +112,45 @@ export class Lobby extends React.Component {
                         <div className="row clearfix">
                             <div className="col-lg-12">
                                 <div className="card">
-                                    <div className="chat_list">
-                                        <div className="input-group">
-
-                                            <input type="text" className="form-control" placeholder="Add players" required />
-
-                                        </div>
-                                        <ul className="user_list list-unstyled mb-0 mt-3">
-                                            <li>
-                                                <a >
-                                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/32/32ae6e98876f1ce90f87bb639b0a3ac780e2d046.jpg" alt="avatar" />
-                                                    <div className="about">
-                                                        <div className="name">;/ (y)</div>
-                                                        <div className="status online"> <i className="zmdi zmdi-circle" /></div>
+                                    <UnselectedPlayers players = {this.state.unselectedPlayers} moveUnselectedToRad= {this.moveUnselectedToRad} moveUnselectedToDire= {this.moveUnselectedToDire}/>
+                                    <div className={"chat_window body " + style.ChatWindow}> 
+                                            <>
+                                                    <div className = "d-flex justify-content-center">
+                                                        <button onClick={this.startHandler} className="btn btn-success" disabled={!this.state.isGameReady}> Start Game!!!</button>
                                                     </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a >
-                                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/59/597471d990ad1cb07af4e5104ea324b982ea123c.jpg" alt="avatar" />
-                                                    <div className="about">
-                                                        <div className="name">bobby</div>
-                                                        <div className="status online"> <i className="zmdi zmdi-circle" /></div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a >
-                                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/a8/a8091fa7e1c73cf1289ef49f74e105e0c0f5562f.jpg" alt="avatar" />
-                                                    <div className="about">
-                                                        <div className="name">invis - Kuroko</div>
-                                                        <div className="status online"> <i className="zmdi zmdi-circle" /></div>
-                                                    </div>
-                                                </a>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    <div className="chat_window body">
-                                    {this.state.isGame ?
-                                        <>
-                                            
-
-                                                <div className="row">
-                                                    <div className="col-lg-6 col-md-12 col-sm-12">
-                                                        <div className="card">
-                                                            <div className="header">
-                                                                <h2><strong>Radiant</strong> <small>payers </small></h2>
-
-                                                            </div>
-                                                            <div className="body">
-                                                                <div className="table-responsive">
-                                                                    <table className="table m-b-0">
-                                                                        <thead className="thead-light">
-                                                                            <tr>
-                                                                                <th scope="col">#</th>
-                                                                                <th scope="col">Player Profle</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <th scope="row">1</th>
-                                                                                <td>Bot</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">2</th>
-                                                                                <td>Bot</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">3</th>
-                                                                                <td>Bot</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">4</th>
-                                                                                <td>Bot</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">5</th>
-                                                                                <td>Bot</td>
-
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
+                                                    <div className="row">
+                                                        <div className="col-lg-6 col-md-12 col-sm-12">
+                                                            <div className="card">
+                                                                <div className="header">
+                                                                    <h2><strong>Radiant</strong> <small>players </small></h2>
                                                                 </div>
+                                                                <div className="body">
+                                                                    <SelectedPlayers players = {this.state.radPlayers} radiant={true} unselectPlayer = {this.unselectPlayerFromRad}/>
+                                                                </div>
+                                                            </div>
+                                                            <div className = "d-flex justify-content-center">
+                                                                <button onClick={this.radiantVictoryHandler} className="btn btn-success" disabled={!this.state.isGameStarted}> Radiant Victory</button>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div className="col-lg-6 col-md-12 col-sm-12">
+                                                            <div className="card">
+                                                                <div className="header">
+                                                                    <h2><strong>Dire</strong><small>players</small></h2>
+
+                                                                </div>
+                                                                <div className="body">
+                                                                    <SelectedPlayers players = {this.state.direPlayers} radiant={false} unselectPlayer = {this.unselectPlayerFromDire}/>
+                                                                </div>
+                                                            </div>
+                                                            <div className = "d-flex justify-content-center">
+                                                                <button onClick={this.dirtVictoryHandler} className="btn btn-danger" disabled={!this.state.isGameStarted}> Dire Victory</button>
                                                             </div>
                                                         </div>
                                                     </div>
-
-
-                                                    <div className="col-lg-6 col-md-12 col-sm-12">
-                                                        <div className="card">
-                                                            <div className="header">
-                                                                <h2><strong>Dire</strong><small>players</small></h2>
-
-                                                            </div>
-                                                            <div className="body">
-                                                                <div className="table-responsive">
-                                                                    <table className="table m-b-0">
-                                                                        <thead className="thead-dark">
-                                                                            <tr>
-                                                                                <th scope="col">#</th>
-                                                                                <th scope="col">Player Profile</th>
-
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <th scope="row">1</th>
-                                                                                <td> bobby </td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">2</th>
-                                                                                <td> invis-kuroko</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">3</th>
-                                                                                <td> ;/ (y)</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">4</th>
-                                                                                <td>Bot</td>
-
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <th scope="row">5</th>
-                                                                                <td> Bot</td>
-
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </>
-                                        :
-                                        <><button onClick={this.clickHandler} className="btn btn-warning"> Start Game</button></>}
+                                            </>
+                                           
                                         </div>
                                 </div>
                             </div>
