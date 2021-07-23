@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const LandingPage = () => {
     return (<>
-        <section className="content" style={{ background: 'linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url("https://riki.dotabuff.com/c/62c40afd52ccac27eb78c01ce839fa672e24f4e1/687474703a2f2f692e696d6775722e636f6d2f4b424162504e492e6a7067")', margin: '0', border: 'none', borderRadius: '0', height: '100vh', backgroundPosition: 'center', backgroundSize: 'cover' }}>
+        <section className="content" style={{ background: 'linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url("https://i.imgur.com/1TXR1ab.jpeg")', margin: '0', border: 'none', borderRadius: '0', height: '100vh', backgroundPosition: 'center', backgroundSize: 'cover' }}>
             <div className="body_scroll">
                 <div className="block-header">
                     <div className="row">
