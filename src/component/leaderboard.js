@@ -8,12 +8,12 @@ export class Leaderboard extends React.Component {
     render() {
         return (
             <>
-                <section className="content">
+                <section className="content" style={{margin:'20px 250px 20px 250px'}}>
                     <div className="body_scroll">
                         <div className="block-header">
                             <div className="row">
                                 <div className="col-lg-7 col-md-6 col-sm-12">
-                                    <h2>Tables Color</h2>
+                                    <h2>Leaderboard</h2>
                                     <ul className="breadcrumb">
                                         <li className="breadcrumb-item"><Link to="/"><i className="zmdi zmdi-home" /> inhouseStat</Link></li>
                                         
