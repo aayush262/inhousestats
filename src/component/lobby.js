@@ -6,10 +6,15 @@ import SelectedPlayers from './SelectedPlayers/SelectedPlayers';
 
 import style from './lobby.module.scss'
 
+import axios from '../axios-server';
+
 export class Lobby extends React.Component {
 
     constructor() {
         super();
+
+        axios.get(`/players`).then(res=>console.log(res))
+
         this.state = {
             isGameStarted: false,
             isGameReady: false,
