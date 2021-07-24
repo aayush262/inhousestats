@@ -1,9 +1,12 @@
-import React from 'react'
+import React, {useState}  from 'react'
+
 import UnselectedPlayer from './UnselectedPlayer/UnselectedPlayer'
 
 import styles from './UnselectedPlayers.module.scss'
 
-const unselectedPlayers = props =>{
+import axios from '../../axios-server'
+
+const UnselectedPlayers = props =>{
     let players = props.players.map(player=>
        <UnselectedPlayer 
             key = {player.id}
@@ -12,13 +15,27 @@ const unselectedPlayers = props =>{
             moveUnselectedToDire={props.moveUnselectedToDire}
        />
     )
-    
+    const [input, setInput] = useState('') 
+
+    let submitHandler = (event) => {
+        if(event.key==="Enter"){
+            axios.post("/players", {
+                steamID: input
+            })
+        }
+    }
+
+    let changeHandler = event =>{
+        setInput(event.target.value)
+        console.log(input)
+    }
+
     return(
      
         <div className= {styles.ChatList + " chat_list"}>
             <div className="input-group">
 
-                <input type="text" className="form-control" placeholder="Add players" required />
+                <input type="text" className="form-control"  placeholder="Add players" onKeyPress={submitHandler} onChange={changeHandler} required />
 
             </div>
             <ul className="user_list list-unstyled mb-0 mt-3">
@@ -30,4 +47,4 @@ const unselectedPlayers = props =>{
     )
 }
 
-export default unselectedPlayers 
+export default UnselectedPlayers 
