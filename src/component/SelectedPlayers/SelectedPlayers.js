@@ -3,7 +3,7 @@ import SelectedPlayer from './SelectedPlayer/SelectedPlayer'
 
 const selectedPlayers = props =>{
     let players = props.players.map((player,index)=>
-        <SelectedPlayer key={player.id} player={player} index={index} unselectPlayer={props.unselectPlayer}/>
+        <SelectedPlayer key={player.id} player={player} index={index+1} unselectPlayer={props.unselectPlayer}/>
     )
 
     let tableHeader;
