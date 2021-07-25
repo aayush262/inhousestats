@@ -5,6 +5,9 @@ import UnselectedPlayer from './UnselectedPlayer/UnselectedPlayer'
 import styles from './UnselectedPlayers.module.scss'
 
 import axios from '../../axios-server'
+import { Loader } from '../loader/loader'
+
+import cogoToast from 'cogo-toast';
 
 const UnselectedPlayers = props =>{
     let players = props.players.map(player=>
@@ -15,13 +18,18 @@ const UnselectedPlayers = props =>{
             moveUnselectedToDire={props.moveUnselectedToDire}
        />
     )
-    const [input, setInput] = useState('') 
+    const [input, setInput] = useState('')
+    const [isAdding,setIsAdding] = useState(false)
 
-    let submitHandler = (event) => {
+    let submitHandler = async(event) => {
         if(event.key==="Enter"){
-            axios.post("/players", {
+            setIsAdding(true);
+            const {data} = await axios.post("/players", {
                 steamID: input
             })
+            await props.getPlayers();
+            setIsAdding(false);
+            cogoToast.success(data.msg)
         }
     }
 
@@ -34,8 +42,7 @@ const UnselectedPlayers = props =>{
      
         <div className= {styles.ChatList + " chat_list"}>
             <div className="input-group">
-
-                <input type="text" className="form-control"  placeholder="Add players" onKeyPress={submitHandler} onChange={changeHandler} required />
+                {isAdding?<Loader msg="adding player"></Loader>:<input type="text" className="form-control"  placeholder="Add players" onKeyPress={submitHandler} onChange={changeHandler} required />}
 
             </div>
             <ul className="user_list list-unstyled mb-0 mt-3">

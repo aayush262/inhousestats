@@ -4,43 +4,46 @@ import { Link } from 'react-router-dom';
 import UnselectedPlayers  from './UnselectedPlayers/UnselectedPlayers'
 import SelectedPlayers from './SelectedPlayers/SelectedPlayers';
 
+
 import style from './lobby.module.scss'
 
 import axios from '../axios-server';
+import { Loader } from './loader/loader';
 
 export class Lobby extends React.Component {
 
     constructor() {
         super();
-
-        axios.get(`/players`).then(res=>console.log(res))
-
         this.state = {
             isGameStarted: false,
             isGameReady: false,
             radPlayers: [],
             direPlayers: [],
-            unselectedPlayers: [
-                {
-                    id: 1,
-                    image: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/32/32ae6e98876f1ce90f87bb639b0a3ac780e2d046.jpg",
-                    name: ";/ (y)",
-                    status: true
-                },
-                {
-                    id: 2,
-                    image: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/59/597471d990ad1cb07af4e5104ea324b982ea123c.jpg",
-                    name: "bobby",
-                    status: true
-                },
-                {
-                    id: 3,
-                    image: "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/a8/a8091fa7e1c73cf1289ef49f74e105e0c0f5562f.jpg",
-                    name: "invis - Kuroko",
-                    status: false
-                }
-            ]
+            unselectedPlayers: [],
+            isLoading: false,
+            isAdding: false
         }
+    }
+
+    componentDidMount(){
+        this.setState((prevState)=>{
+            return{
+               isLoading:true
+            }
+        },async()=>{
+            const {data} = await axios.get(`/players`);
+            this.setState({
+                unselectedPlayers: data.data,
+                isLoading: false
+            })
+        })
+    }
+    
+    getAllPlayers=async()=>{
+        const {data} = await axios.get(`/players`);
+        this.setState({
+            unselectedPlayers: data.data,
+        })
     }
 
     startHandler=()=>{
@@ -92,8 +95,6 @@ export class Lobby extends React.Component {
 
 
     render() {
-
-        
         return (
             <>
                 <div className="body_scroll">
@@ -116,8 +117,8 @@ export class Lobby extends React.Component {
                     <div className="container-fluid">
                         <div className="row clearfix">
                             <div className="col-lg-12">
-                                <div className="card">
-                                    <UnselectedPlayers players = {this.state.unselectedPlayers} moveUnselectedToRad= {this.moveUnselectedToRad} moveUnselectedToDire= {this.moveUnselectedToDire}/>
+                                {this.state.isLoading?<Loader msg='fetching players...'></Loader>:<div className="card">
+                                    <UnselectedPlayers getPlayers={this.getAllPlayers} players = {this.state.unselectedPlayers} moveUnselectedToRad= {this.moveUnselectedToRad} moveUnselectedToDire= {this.moveUnselectedToDire}/>
                                     <div className={"chat_window body " + style.ChatWindow}> 
                                             <>
                                                     <div className = "d-flex justify-content-center">
@@ -157,7 +158,7 @@ export class Lobby extends React.Component {
                                             </>
                                            
                                         </div>
-                                </div>
+                                </div>}
                             </div>
                         </div>
                     </div>
