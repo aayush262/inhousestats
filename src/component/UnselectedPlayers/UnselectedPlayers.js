@@ -10,7 +10,9 @@ import { Loader } from '../loader/loader'
 import cogoToast from 'cogo-toast';
 
 const UnselectedPlayers = props =>{
-    let players = props.players.map(player=>
+    let players = props.players.sort(
+        (player1, player2) => (player1.status === player2.status)? 0 : player1.status? -1 : 1
+    ).map(player=>
        <UnselectedPlayer 
             key = {player.id}
             player ={player}
