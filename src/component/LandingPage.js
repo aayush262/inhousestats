@@ -33,7 +33,7 @@ export const LandingPage = () => {
                         </div>
                         <div className="col-lg-8 col-md-12">
                             <div className="card">
-                                <iframe width="956" height="538" src="https://www.youtube.com/embed/Ao3R8UKCy3k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe width="956" height="538" src="https://www.youtube.com/embed/Ao3R8UKCy3k" title="YouTube video player"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
                             </div>
 
                         </div>
